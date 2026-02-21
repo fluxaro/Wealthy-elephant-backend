@@ -1,0 +1,168 @@
+### Wealthy Elephant API Testing
+### Use with REST Client extension in VS Code or import to Postman
+
+@baseUrl = http://localhost:5000
+@prodUrl = https://your-production-url.com
+
+### Health Check
+GET {{baseUrl}}/health
+
+### =====================================================
+### Contact Inquiry
+### =====================================================
+
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "inquiryType": "general",
+  "message": "I would like to know more about your services and how you can help me find the perfect property."
+}
+
+### =====================================================
+### Klin - Rental Request
+### =====================================================
+
+POST {{baseUrl}}/api/klin/request
+Content-Type: application/json
+
+{
+  "name": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "phone": "+254712345678",
+  "propertyType": "apartment",
+  "location": "Nairobi, Westlands",
+  "budget": "$800-$1200",
+  "moveInDate": "2024-04-01",
+  "additionalNotes": "Looking for a 2-bedroom apartment with parking"
+}
+
+### =====================================================
+### Klin - Intelligence Check
+### =====================================================
+
+POST {{baseUrl}}/api/klin/intelligence
+Content-Type: application/json
+
+{
+  "name": "Michael Johnson",
+  "email": "michael.j@example.com",
+  "phone": "+254723456789",
+  "propertyAddress": "123 Mombasa Road, Nairobi",
+  "checkType": "comprehensive",
+  "urgency": "urgent",
+  "additionalInfo": "Need full background check for potential tenant"
+}
+
+### =====================================================
+### Klin - Partnership Request
+### =====================================================
+
+POST {{baseUrl}}/api/klin/partnership
+Content-Type: application/json
+
+{
+  "companyName": "Prime Properties Ltd",
+  "contactPerson": "Sarah Williams",
+  "email": "sarah@primeproperties.com",
+  "phone": "+254734567890",
+  "partnershipType": "property-owner",
+  "description": "We own multiple residential properties in Nairobi and would like to partner with Klin for property management and tenant screening services.",
+  "website": "https://www.primeproperties.com"
+}
+
+### =====================================================
+### Kaizen - Project Request
+### =====================================================
+
+POST {{baseUrl}}/api/kaizen/project
+Content-Type: application/json
+
+{
+  "name": "David Brown",
+  "email": "david.brown@example.com",
+  "phone": "+254745678901",
+  "projectType": "residential",
+  "projectScope": "medium",
+  "budget": "$50,000-$100,000",
+  "timeline": "6-9 months",
+  "description": "Planning to build a modern 3-bedroom house with contemporary design. Need full construction services including architecture, engineering, and project management.",
+  "location": "Karen, Nairobi"
+}
+
+### =====================================================
+### Kaizen - Build Planner
+### =====================================================
+
+POST {{baseUrl}}/api/kaizen/buildplanner
+Content-Type: application/json
+
+{
+  "name": "Emily Davis",
+  "email": "emily.davis@example.com",
+  "phone": "+254756789012",
+  "projectType": "commercial",
+  "propertySize": "5000 sq ft",
+  "budget": "$200,000-$300,000",
+  "startDate": "2024-06-01",
+  "features": "Modern office space with open floor plan, conference rooms, kitchen area, parking for 20 vehicles, solar panels, rainwater harvesting system",
+  "additionalNotes": "LEED certification preferred"
+}
+
+### =====================================================
+### Newsletter Subscription
+### =====================================================
+
+POST {{baseUrl}}/api/newsletter
+Content-Type: application/json
+
+{
+  "email": "subscriber@example.com",
+  "name": "Newsletter Subscriber"
+}
+
+### Newsletter - Without Name
+POST {{baseUrl}}/api/newsletter
+Content-Type: application/json
+
+{
+  "email": "another@example.com"
+}
+
+### =====================================================
+### Error Testing - Invalid Email
+### =====================================================
+
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "invalid-email",
+  "inquiryType": "general",
+  "message": "This should fail validation"
+}
+
+### Error Testing - Short Message
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "inquiryType": "general",
+  "message": "Short"
+}
+
+### Error Testing - Invalid Inquiry Type
+POST {{baseUrl}}/api/contact
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "inquiryType": "invalid-type",
+  "message": "This should fail because inquiry type is invalid"
+}

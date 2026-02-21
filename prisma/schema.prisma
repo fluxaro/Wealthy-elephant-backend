@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ContactInquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  inquiryType String
+  message     String   @db.Text
+  status      String   @default("new")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model KlinRequest {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  propertyType    String
+  location        String
+  budget          String
+  moveInDate      String?
+  additionalNotes String?  @db.Text
+  status          String   @default("new")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model KlinIntelligenceCheck {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  propertyAddress String
+  checkType       String
+  urgency         String   @default("normal")
+  additionalInfo  String?  @db.Text
+  status          String   @default("new")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model KlinPartnership {
+  id              String   @id @default(cuid())
+  companyName     String
+  contactPerson   String
+  email           String
+  phone           String
+  partnershipType String
+  description     String   @db.Text
+  website         String?
+  status          String   @default("new")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model KaizenProject {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  projectType     String
+  projectScope    String
+  budget          String
+  timeline        String
+  description     String   @db.Text
+  location        String?
+  status          String   @default("new")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model BuildPlannerSubmission {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  projectType     String
+  propertySize    String
+  budget          String
+  startDate       String?
+  features        String   @db.Text
+  additionalNotes String?  @db.Text
+  status          String   @default("new")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model NewsletterSubscriber {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  isActive      Boolean  @default(true)
+  subscribedAt  DateTime @default(now())
+  unsubscribedAt DateTime?
+  
+  @@index([email])
+  @@index([isActive])
+}
