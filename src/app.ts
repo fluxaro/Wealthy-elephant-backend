@@ -10,6 +10,7 @@ import contactRouter from './api/contact';
 import klinRouter from './api/klin';
 import kaizenRouter from './api/kaizen';
 import newsletterRouter from './api/newsletter';
+import authRouter from './api/auth';
 
 // Load environment variables
 dotenv.config();
@@ -34,6 +35,7 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // API Routes
+app.use('/api/auth', authRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/klin', klinRouter);
 app.use('/api/kaizen', kaizenRouter);
