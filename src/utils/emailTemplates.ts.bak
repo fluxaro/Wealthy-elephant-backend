@@ -1,0 +1,947 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.emailTemplates = void 0;
+// Cloudinary logo URL
+const LOGO_URL = 'https://res.cloudinary.com/dbehg8jsv/image/upload/v1771602337/imgi_18_image_iau779.webp';
+// Base email styles
+const baseStyles = `
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f5f5f5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+    
+    .header {
+      padding: 32px 40px;
+      background: linear-gradient(135deg, #0a4d3c 0%, #0d6b4f 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+    
+    .logo {
+      max-width: 180px;
+      height: auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero {
+      padding: 48px 40px;
+      text-align: center;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+      position: relative;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0a4d3c 0%, #10b981 50%, #0a4d3c 100%);
+    }
+    
+    .hero-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 12px 0;
+      line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: #6b7280;
+      margin: 0;
+      line-height: 1.5;
+    }
+    
+    .content {
+      padding: 40px;
+    }
+    
+    .message {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #374151;
+      margin: 0 0 24px 0;
+    }
+    
+    .card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0a4d3c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 16px 0;
+    }
+    
+    .info-row {
+      display: flex;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      min-width: 120px;
+    }
+    
+    .info-value {
+      font-size: 14px;
+      color: #111827;
+      flex: 1;
+    }
+    
+    .cta-container {
+      text-align: center;
+      padding: 32px 0;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #0a4d3c 0%, #10b981 100%);
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(10, 77, 60, 0.2);
+      transition: transform 0.2s;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(10, 77, 60, 0.3);
+    }
+    
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #e5e7eb 50%, transparent 100%);
+      margin: 32px 0;
+    }
+    
+    .footer {
+      padding: 32px 40px;
+      background-color: #111827;
+      color: #9ca3af;
+      text-align: center;
+    }
+    
+    .footer-text {
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 16px 0;
+    }
+    
+    .social-links {
+      margin: 24px 0;
+    }
+    
+    .social-link {
+      display: inline-block;
+      margin: 0 8px;
+      color: #10b981;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .contact-info {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 16px 0 0 0;
+    }
+    
+    @media only screen and (max-width: 600px) {
+      .header, .hero, .content, .footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      
+      .hero-title {
+        font-size: 24px;
+      }
+      
+      .info-row {
+        flex-direction: column;
+      }
+      
+      .info-label {
+        margin-bottom: 4px;
+      }
+    }
+  </style>
+`;
+exports.emailTemplates = {
+    contactInquiry: {
+        user: (name) => ({
+            subject: 'We\'ve received your inquiry – Wealthy Elephant',
+            html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Inquiry Received</title>
+          ${baseStyles}
+        </head>
+        <body>
+          <div class="email-container">
+            <!-- Header -->
+            <div class="header">
+              <img src="${LOGO_URL}" alt="Wealthy Elephant" class="logo" />
+            </div>
+            
+            <!-- Hero Section -->
+            <div class="hero">
+              <h1 class="hero-title">Thank you, ${name}!</h1>
+              <p class="hero-subtitle">We've received your inquiry and are ready to assist.</p>
+            </div>
+            
+            <!-- Content -->
+            <div class="content">
+              <p class="message">
+                Your inquiry has been successfully received by our team. We appreciate you reaching out to Wealthy Elephant.
+              </p>
+              
+              <p class="message">
+                A member of our team will review your request and contact you shortly to discuss the details. We're committed to providing you with the best possible service.
+              </p>
+              
+              <div class="divider"></div>
+              
+              <p class="message" style="text-align: center; color: #6b7280; font-size: 14px;">
+                In the meantime, feel free to explore our ventures and learn more about how we're building the future.
+              </p>
+              
+              <div class="cta-container">
+                <a href="https://www.wealthyelephant.com" class="cta-button">Explore Our Ventures</a>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer">
+              <p class="footer-text">
+                <strong>Wealthy Elephant</strong><br>
+                Building Tomorrow's Solutions Today
+              </p>
+              
+              <div class="social-links">
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Instagram</a>
+                <a href="#" class="social-link">Twitter</a>
+              </div>
+              
+              <p class="contact-info">
+                Email: wealthyelephant@gmail.com<br>
+                Website: www.wealthyelephant.com
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+        }),
+    },
+    klinRequest: {
+        user: (name) => ({
+            subject: 'Your Rental Request – Klin Konnect',
+            html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Rental Request Received</title>
+          ${baseStyles}
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <img src="${LOGO_URL}" alt="Wealthy Elephant" class="logo" />
+            </div>
+            
+            <div class="hero">
+              <h1 class="hero-title">Hello, ${name}!</h1>
+              <p class="hero-subtitle">Your rental request has been received.</p>
+            </div>
+            
+            <div class="content">
+              <p class="message">
+                Thank you for choosing Klin Konnect for your housing needs. We've received your rental request and our team is already reviewing your requirements.
+              </p>
+              
+              <p class="message">
+                We'll contact you shortly with available options that match your criteria. Our goal is to help you find the perfect home.
+              </p>
+              
+              <div class="card">
+                <h3 class="card-title">What Happens Next?</h3>
+                <div class="info-row">
+                  <span class="info-label">Step 1</span>
+                  <span class="info-value">Our team reviews your requirements</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Step 2</span>
+                  <span class="info-value">We match you with suitable properties</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Step 3</span>
+                  <span class="info-value">We contact you to schedule viewings</span>
+                </div>
+              </div>
+              
+              <div class="cta-container">
+                <a href="https://www.wealthyelephant.com/klin" class="cta-button">View Available Properties</a>
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p class="footer-text">
+                <strong>Klin Konnect</strong> by Wealthy Elephant<br>
+                Your Trusted Housing Partner
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Instagram</a>
+              </div>
+              <p class="contact-info">
+                Email: wealthyelephant@gmail.com<br>
+                Website: www.wealthyelephant.com
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+        }),
+    },
+    klinIntelligence: {
+        user: (name) => ({
+            subject: 'Intelligence Check Request Received – Klin Konnect',
+            html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Intelligence Check Request</title>
+          ${baseStyles}
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <img src="${LOGO_URL}" alt="Wealthy Elephant" class="logo" />
+            </div>
+            
+            <div class="hero">
+              <h1 class="hero-title">Hello, ${name}!</h1>
+              <p class="hero-subtitle">Your intelligence check request is being processed.</p>
+            </div>
+            
+            <div class="content">
+              <p class="message">
+                We've received your request for a housing intelligence check. Our team is processing your request and will provide you with detailed information soon.
+              </p>
+              
+              <p class="message">
+                Klin Intelligence provides comprehensive property and tenant verification services to ensure safe and informed housing decisions.
+              </p>
+              
+              <div class="card">
+                <h3 class="card-title">Our Intelligence Services</h3>
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Background verification</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Credit history analysis</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Rental history review</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Comprehensive reporting</span>
+                </div>
+              </div>
+              
+              <p class="message" style="text-align: center; color: #6b7280;">
+                A specialist will contact you within 24-48 hours with your results.
+              </p>
+            </div>
+            
+            <div class="footer">
+              <p class="footer-text">
+                <strong>Klin Intelligence</strong> by Wealthy Elephant<br>
+                Secure. Verified. Trusted.
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Instagram</a>
+              </div>
+              <p class="contact-info">
+                Email: wealthyelephant@gmail.com<br>
+                Website: www.wealthyelephant.com
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+        }),
+    },
+    klinPartnership: {
+        user: (contactPerson) => ({
+            subject: 'Partnership Inquiry Received – Wealthy Elephant',
+            html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Partnership Inquiry</title>
+          ${baseStyles}
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <img src="${LOGO_URL}" alt="Wealthy Elephant" class="logo" />
+            </div>
+            
+            <div class="hero">
+              <h1 class="hero-title">Hello, ${contactPerson}!</h1>
+              <p class="hero-subtitle">Thank you for your interest in partnering with us.</p>
+            </div>
+            
+            <div class="content">
+              <p class="message">
+                We've received your partnership proposal and our business development team will review it carefully. We're always excited to explore new collaboration opportunities.
+              </p>
+              
+              <p class="message">
+                At Wealthy Elephant, we believe in building strong partnerships that create mutual value and drive innovation in the housing and construction sectors.
+              </p>
+              
+              <div class="card">
+                <h3 class="card-title">Partnership Process</h3>
+                <div class="info-row">
+                  <span class="info-label">1-2 Days</span>
+                  <span class="info-value">Initial review of your proposal</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">3-5 Days</span>
+                  <span class="info-value">Team discussion and evaluation</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">5-7 Days</span>
+                  <span class="info-value">We'll reach out to discuss next steps</span>
+                </div>
+              </div>
+              
+              <div class="cta-container">
+                <a href="https://www.wealthyelephant.com/partnerships" class="cta-button">Learn About Our Partnerships</a>
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p class="footer-text">
+                <strong>Wealthy Elephant</strong><br>
+                Building Partnerships, Creating Value
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Instagram</a>
+              </div>
+              <p class="contact-info">
+                Email: wealthyelephant@gmail.com<br>
+                Website: www.wealthyelephant.com
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+        }),
+    },
+    kaizenProject: {
+        user: (name) => ({
+            subject: 'Project Request Received – Kaizen Kora',
+            html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Project Request</title>
+          ${baseStyles}
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <img src="${LOGO_URL}" alt="Wealthy Elephant" class="logo" />
+            </div>
+            
+            <div class="hero">
+              <h1 class="hero-title">Hello, ${name}!</h1>
+              <p class="hero-subtitle">Your project is in safe hands.</p>
+            </div>
+            
+            <div class="content">
+              <p class="message">
+                Thank you for submitting your project request to Kaizen Kora. We've received your information and our project team is reviewing your requirements.
+              </p>
+              
+              <p class="message">
+                A project consultant will contact you within 2-3 business days to discuss your project in detail and provide you with a comprehensive plan.
+              </p>
+              
+              <div class="card">
+                <h3 class="card-title">Our Process</h3>
+                <div class="info-row">
+                  <span class="info-label">Discovery</span>
+                  <span class="info-value">Understanding your vision and requirements</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Planning</span>
+                  <span class="info-value">Creating detailed project roadmap</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Execution</span>
+                  <span class="info-value">Building with precision and quality</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Delivery</span>
+                  <span class="info-value">Ensuring your complete satisfaction</span>
+                </div>
+              </div>
+              
+              <div class="cta-container">
+                <a href="https://www.wealthyelephant.com/kaizen" class="cta-button">Explore Our Projects</a>
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p class="footer-text">
+                <strong>Kaizen Kora</strong> by Wealthy Elephant<br>
+                Excellence in Construction & Development
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Instagram</a>
+              </div>
+              <p class="contact-info">
+                Email: wealthyelephant@gmail.com<br>
+                Website: www.wealthyelephant.com
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+        }),
+    },
+    buildPlanner: {
+        user: (name, data) => ({
+            subject: 'Build Planner Submission Received – Kaizen Kora',
+            html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Build Planner Received</title>
+          ${baseStyles}
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <img src="${LOGO_URL}" alt="Wealthy Elephant" class="logo" />
+            </div>
+            
+            <div class="hero">
+              <h1 class="hero-title">Hi ${name}, your project is in safe hands.</h1>
+              <p class="hero-subtitle">One of our specialists will contact you to plan your next steps.</p>
+            </div>
+            
+            <div class="content">
+              <p class="message">
+                Thank you for using our Build Planner tool. We've received your project details and our planning team is analyzing your requirements.
+              </p>
+              
+              <div class="card">
+                <h3 class="card-title">Your Project Summary</h3>
+                <div class="info-row">
+                  <span class="info-label">Project Type</span>
+                  <span class="info-value">${data.projectType}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Property Size</span>
+                  <span class="info-value">${data.propertySize}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Budget Range</span>
+                  <span class="info-value">${data.budget}</span>
+                </div>
+                ${data.startDate ? `
+                <div class="info-row">
+                  <span class="info-label">Target Start</span>
+                  <span class="info-value">${data.startDate}</span>
+                </div>
+                ` : ''}
+              </div>
+              
+              <p class="message">
+                We will prepare a comprehensive build plan and contact you within 3-5 business days with:
+              </p>
+              
+              <div class="card">
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Detailed project timeline</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Cost breakdown and estimates</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Material recommendations</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">✓</span>
+                  <span class="info-value">Next steps and consultation</span>
+                </div>
+              </div>
+              
+              <div class="cta-container">
+                <a href="https://www.wealthyelephant.com/kaizen/consultation" class="cta-button">Schedule Consultation</a>
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p class="footer-text">
+                <strong>Kaizen Kora Build Planner</strong><br>
+                Precision Planning for Perfect Projects
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Instagram</a>
+              </div>
+              <p class="contact-info">
+                Email: wealthyelephant@gmail.com<br>
+                Website: www.wealthyelephant.com
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+        }),
+    },
+    newsletter: {
+        user: (email, name) => ({
+            subject: 'Welcome to Wealthy Elephant Newsletter',
+            html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Welcome to Our Newsletter</title>
+          ${baseStyles}
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <img src="${LOGO_URL}" alt="Wealthy Elephant" class="logo" />
+            </div>
+            
+            <div class="hero">
+              <h1 class="hero-title">Welcome${name ? `, ${name}` : ''}!</h1>
+              <p class="hero-subtitle">You're now part of the Wealthy Elephant community.</p>
+            </div>
+            
+            <div class="content">
+              <p class="message">
+                Thank you for subscribing to the Wealthy Elephant newsletter! You'll now receive updates about our latest properties, market insights, and exclusive opportunities.
+              </p>
+              
+              <div class="card">
+                <h3 class="card-title">What to Expect</h3>
+                <div class="info-row">
+                  <span class="info-label">📰</span>
+                  <span class="info-value">Weekly market insights and trends</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">🏠</span>
+                  <span class="info-value">New property listings and opportunities</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">💡</span>
+                  <span class="info-value">Expert tips and industry knowledge</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">🎯</span>
+                  <span class="info-value">Exclusive offers for subscribers</span>
+                </div>
+              </div>
+              
+              <p class="message" style="text-align: center;">
+                Stay tuned for valuable content delivered straight to your inbox!
+              </p>
+              
+              <div class="cta-container">
+                <a href="https://www.wealthyelephant.com" class="cta-button">Visit Our Website</a>
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p class="footer-text">
+                <strong>Wealthy Elephant</strong><br>
+                Building Tomorrow's Solutions Today
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Instagram</a>
+                <a href="#" class="social-link">Twitter</a>
+              </div>
+              <p class="contact-info">
+                Email: wealthyelephant@gmail.com<br>
+                Website: www.wealthyelephant.com<br>
+                <a href="https://www.wealthyelephant.com/unsubscribe" style="color: #6b7280; font-size: 12px;">Unsubscribe</a>
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+        }),
+    },
+};
+contactInquiry: {
+    user: (name) => ({
+        subject: 'Thank you for contacting Wealthy Elephant',
+        html: `
+        <h2>Hello ${name},</h2>
+        <p>Thank you for reaching out to Wealthy Elephant. We have received your inquiry and our team will get back to you within 24-48 hours.</p>
+        <p>We appreciate your interest in our services.</p>
+        <br>
+        <p>Best regards,<br>The Wealthy Elephant Team</p>
+      `,
+    }),
+        admin;
+    (data) => ({
+        subject: `New Contact Inquiry from ${data.name}`,
+        html: `
+        <h2>New Contact Inquiry</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Inquiry Type:</strong> ${data.inquiryType}</p>
+        <p><strong>Message:</strong></p>
+        <p>${data.message}</p>
+      `,
+    }),
+    ;
+}
+klinRequest: {
+    user: (name) => ({
+        subject: 'Your Klin Rental Request - Wealthy Elephant',
+        html: `
+        <h2>Hello ${name},</h2>
+        <p>Thank you for submitting your rental request through Klin. We have received your information and our team is reviewing your requirements.</p>
+        <p>We will contact you shortly with available options that match your criteria.</p>
+        <br>
+        <p>Best regards,<br>The Klin Team</p>
+      `,
+    }),
+        admin;
+    (data) => ({
+        subject: `New Klin Rental Request from ${data.name}`,
+        html: `
+        <h2>New Klin Rental Request</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Property Type:</strong> ${data.propertyType}</p>
+        <p><strong>Location:</strong> ${data.location}</p>
+        <p><strong>Budget:</strong> ${data.budget}</p>
+        <p><strong>Move-in Date:</strong> ${data.moveInDate || 'Not specified'}</p>
+        ${data.additionalNotes ? `<p><strong>Additional Notes:</strong> ${data.additionalNotes}</p>` : ''}
+      `,
+    }),
+    ;
+}
+klinIntelligence: {
+    user: (name) => ({
+        subject: 'Your Klin Intelligence Check Request',
+        html: `
+        <h2>Hello ${name},</h2>
+        <p>We have received your request for a housing intelligence check. Our team is processing your request and will provide you with detailed information soon.</p>
+        <p>Thank you for choosing Klin Intelligence services.</p>
+        <br>
+        <p>Best regards,<br>The Klin Intelligence Team</p>
+      `,
+    }),
+        admin;
+    (data) => ({
+        subject: `New Klin Intelligence Check Request - ${data.checkType}`,
+        html: `
+        <h2>New Intelligence Check Request</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Property Address:</strong> ${data.propertyAddress}</p>
+        <p><strong>Check Type:</strong> ${data.checkType}</p>
+        <p><strong>Urgency:</strong> ${data.urgency}</p>
+        ${data.additionalInfo ? `<p><strong>Additional Info:</strong> ${data.additionalInfo}</p>` : ''}
+      `,
+    }),
+    ;
+}
+klinPartnership: {
+    user: (contactPerson) => ({
+        subject: 'Partnership Inquiry - Wealthy Elephant',
+        html: `
+        <h2>Hello ${contactPerson},</h2>
+        <p>Thank you for your interest in partnering with Wealthy Elephant. We have received your partnership proposal and our business development team will review it carefully.</p>
+        <p>We will reach out to you within 3-5 business days to discuss potential collaboration opportunities.</p>
+        <br>
+        <p>Best regards,<br>The Wealthy Elephant Partnership Team</p>
+      `,
+    }),
+        admin;
+    (data) => ({
+        subject: `New Partnership Inquiry from ${data.companyName}`,
+        html: `
+        <h2>New Partnership Inquiry</h2>
+        <p><strong>Company Name:</strong> ${data.companyName}</p>
+        <p><strong>Contact Person:</strong> ${data.contactPerson}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Partnership Type:</strong> ${data.partnershipType}</p>
+        ${data.website ? `<p><strong>Website:</strong> ${data.website}</p>` : ''}
+        <p><strong>Description:</strong></p>
+        <p>${data.description}</p>
+      `,
+    }),
+    ;
+}
+kaizenProject: {
+    user: (name) => ({
+        subject: 'Your Kaizen Project Request',
+        html: `
+        <h2>Hello ${name},</h2>
+        <p>Thank you for submitting your project request to Kaizen. We have received your information and our project team is reviewing your requirements.</p>
+        <p>A project consultant will contact you within 2-3 business days to discuss your project in detail.</p>
+        <br>
+        <p>Best regards,<br>The Kaizen Team</p>
+      `,
+    }),
+        admin;
+    (data) => ({
+        subject: `New Kaizen Project Request - ${data.projectType}`,
+        html: `
+        <h2>New Kaizen Project Request</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Project Type:</strong> ${data.projectType}</p>
+        <p><strong>Project Scope:</strong> ${data.projectScope}</p>
+        <p><strong>Budget:</strong> ${data.budget}</p>
+        <p><strong>Timeline:</strong> ${data.timeline}</p>
+        ${data.location ? `<p><strong>Location:</strong> ${data.location}</p>` : ''}
+        <p><strong>Description:</strong></p>
+        <p>${data.description}</p>
+      `,
+    }),
+    ;
+}
+buildPlanner: {
+    user: (name) => ({
+        subject: 'Your Build Planner Submission',
+        html: `
+        <h2>Hello ${name},</h2>
+        <p>Thank you for using our Build Planner tool. We have received your project details and our planning team is analyzing your requirements.</p>
+        <p>We will prepare a comprehensive build plan and contact you within 3-5 business days.</p>
+        <br>
+        <p>Best regards,<br>The Kaizen Build Planning Team</p>
+      `,
+    }),
+        admin;
+    (data) => ({
+        subject: `New Build Planner Submission - ${data.projectType}`,
+        html: `
+        <h2>New Build Planner Submission</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Project Type:</strong> ${data.projectType}</p>
+        <p><strong>Property Size:</strong> ${data.propertySize}</p>
+        <p><strong>Budget:</strong> ${data.budget}</p>
+        ${data.startDate ? `<p><strong>Start Date:</strong> ${data.startDate}</p>` : ''}
+        <p><strong>Features:</strong></p>
+        <p>${data.features}</p>
+        ${data.additionalNotes ? `<p><strong>Additional Notes:</strong> ${data.additionalNotes}</p>` : ''}
+      `,
+    }),
+    ;
+}
+newsletter: {
+    user: (email, name) => ({
+        subject: 'Welcome to Wealthy Elephant Newsletter',
+        html: `
+        <h2>Hello${name ? ` ${name}` : ''},</h2>
+        <p>Thank you for subscribing to the Wealthy Elephant newsletter!</p>
+        <p>You'll now receive updates about our latest properties, market insights, and exclusive opportunities.</p>
+        <p>Stay tuned for valuable content delivered straight to your inbox.</p>
+        <br>
+        <p>Best regards,<br>The Wealthy Elephant Team</p>
+      `,
+    }),
+    ;
+}
+;
