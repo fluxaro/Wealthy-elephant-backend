@@ -4,6 +4,7 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || 'https://www.wealthyelephant.com',
   'http://localhost:3000', // For local development
   'http://localhost:5173', // For Vite dev server
+  'http://localhost:5174', // For Vite dev server (alternate port)
 ];
 
 export const corsOptions: CorsOptions = {

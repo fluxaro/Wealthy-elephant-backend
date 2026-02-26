@@ -38,7 +38,7 @@ npm start
 - [Error Handling](#error-handling)
 - [Email Templates](#email-templates)
 
----
+
 
 ## 🔐 Environment Variables
 
