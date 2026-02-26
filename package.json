@@ -9,6 +9,7 @@
     "start": "node dist/server.js",
     "vercel-build": "echo 'Serverless functions - no build needed'",
     "create-admin": "ts-node scripts/create-admin.ts",
+    "test-login": "ts-node test-login.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",

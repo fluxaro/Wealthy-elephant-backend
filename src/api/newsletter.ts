@@ -1,9 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { dbHelpers } from '../config/database';
+import { dbHelpers, db } from '../config/database';
 import { newsletterSchema } from '../middleware/validation';
 import { sendNewsletterWelcomeEmail } from '../utils/emailService';
 import { newsletterLimiter } from '../middleware/rateLimiter';
 import { AppError } from '../middleware/errorHandler';
+import { trackEmailOpen } from '../utils/newsletterService';
 
 const router = Router();
 
@@ -51,5 +52,66 @@ router.post(
     }
   }
 );
+
+// Track email open (1x1 pixel)
+router.get('/track/open/:subscriberId', async (req: Request, res: Response) => {
+  const { subscriberId } = req.params;
+  const campaignId = req.query.c as string;
+
+  if (campaignId) {
+    trackEmailOpen(subscriberId, campaignId).catch(console.error);
+  }
+
+  // Return 1x1 transparent pixel
+  const pixel = Buffer.from(
+    'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+    'base64'
+  );
+  res.writeHead(200, {
+    'Content-Type': 'image/gif',
+    'Content-Length': pixel.length,
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+  });
+  res.end(pixel);
+});
+
+// Unsubscribe endpoint
+router.get('/unsubscribe', async (req: Request, res: Response) => {
+  try {
+    const subscriberId = req.query.id as string;
+
+    if (!subscriberId) {
+      return res.status(400).send('Invalid unsubscribe link');
+    }
+
+    const { error } = await db
+      .from('NewsletterSubscriber')
+      .update({ isActive: false })
+      .eq('id', subscriberId);
+
+    if (error) throw error;
+
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Unsubscribed</title>
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+          h1 { color: #333; }
+          p { color: #666; }
+        </style>
+      </head>
+      <body>
+        <h1>You've been unsubscribed</h1>
+        <p>We're sorry to see you go. You will no longer receive emails from us.</p>
+        <p><a href="${process.env.FRONTEND_URL || 'https://www.wealthyelephant.com'}">Return to homepage</a></p>
+      </body>
+      </html>
+    `);
+  } catch (error) {
+    res.status(500).send('An error occurred while unsubscribing');
+  }
+});
 
 export default router;

@@ -11,6 +11,10 @@ import klinRouter from './api/klin';
 import kaizenRouter from './api/kaizen';
 import newsletterRouter from './api/newsletter';
 import authRouter from './api/auth';
+import adminRouter from './api/admin';
+import adminKlinRouter from './api/admin-klin';
+import adminKaizenRouter from './api/admin-kaizen';
+import adminNewsletterRouter from './api/admin-newsletter';
 
 // Load environment variables
 dotenv.config();
@@ -40,6 +44,12 @@ app.use('/api/contact', contactRouter);
 app.use('/api/klin', klinRouter);
 app.use('/api/kaizen', kaizenRouter);
 app.use('/api/newsletter', newsletterRouter);
+
+// Admin Routes (protected by JWT)
+app.use('/api/admin', adminRouter);
+app.use('/api/admin/klin', adminKlinRouter);
+app.use('/api/admin/kaizen', adminKaizenRouter);
+app.use('/api/admin/newsletter', adminNewsletterRouter);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
