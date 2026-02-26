@@ -4,7 +4,6 @@ import { newsletterSchema } from '../middleware/validation';
 import { sendNewsletterWelcomeEmail } from '../utils/emailService';
 import { newsletterLimiter } from '../middleware/rateLimiter';
 import { AppError } from '../middleware/errorHandler';
-import { trackEmailOpen } from '../utils/newsletterService';
 
 const router = Router();
 
@@ -52,28 +51,6 @@ router.post(
     }
   }
 );
-
-// Track email open (1x1 pixel)
-router.get('/track/open/:subscriberId', async (req: Request, res: Response) => {
-  const { subscriberId } = req.params;
-  const campaignId = req.query.c as string;
-
-  if (campaignId) {
-    trackEmailOpen(subscriberId, campaignId).catch(console.error);
-  }
-
-  // Return 1x1 transparent pixel
-  const pixel = Buffer.from(
-    'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-    'base64'
-  );
-  res.writeHead(200, {
-    'Content-Type': 'image/gif',
-    'Content-Length': pixel.length,
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-  });
-  res.end(pixel);
-});
 
 // Unsubscribe endpoint
 router.get('/unsubscribe', async (req: Request, res: Response) => {

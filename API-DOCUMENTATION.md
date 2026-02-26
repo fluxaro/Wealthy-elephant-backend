@@ -11,10 +11,9 @@
 1. [Authentication](#authentication)
 2. [Public Endpoints](#public-endpoints)
 3. [Admin Dashboard Endpoints](#admin-dashboard-endpoints)
-4. [Admin Newsletter Management](#admin-newsletter-management)
-5. [Database Schema](#database-schema)
-6. [Error Handling](#error-handling)
-7. [Rate Limiting](#rate-limiting)
+4. [Database Schema](#database-schema)
+5. [Error Handling](#error-handling)
+6. [Rate Limiting](#rate-limiting)
 
 ---
 
@@ -59,7 +58,6 @@ Verify JWT token validity.
 ```
 Authorization: Bearer <token>
 ```
-
 
 **Response:**
 ```json
@@ -374,15 +372,6 @@ Unsubscribe from newsletter (typically accessed via email link).
 
 ---
 
-### 9. Newsletter Open Tracking
-**GET** `/api/newsletter/track/open/:subscriberId?c=<campaign_id>`
-
-Track email opens (1x1 transparent pixel).
-
-**Response:** 1x1 GIF image
-
----
-
 ## Admin Dashboard Endpoints
 
 All admin endpoints require JWT authentication.
@@ -419,13 +408,7 @@ Get overview statistics for the dashboard.
     },
     "newsletter": {
       "totalSubscribers": 2431,
-      "activeSubscribers": 2380,
-      "lastCampaign": {
-        "subject": "Monthly Update",
-        "sentDate": "2026-02-20T10:00:00Z",
-        "openRate": 45.2,
-        "clickRate": 12.8
-      }
+      "activeSubscribers": 2380
     }
   }
 }
@@ -552,8 +535,6 @@ Update request status and notes.
 }
 ```
 
----
-
 #### Get Intelligence Checks
 **GET** `/api/admin/klin/intelligence?page=1&limit=20&status=pending`
 
@@ -625,449 +606,23 @@ Get paginated list of build planner submissions.
 
 ---
 
-## Admin Newsletter Management
-
-### Newsletter Dashboard Stats
-**GET** `/api/admin/newsletter/stats`
-
-Get newsletter statistics.
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "totalSubscribers": 2431,
-    "activeSubscribers": 2380,
-    "unsubscribed": 51,
-    "lastCampaign": {
-      "id": "uuid",
-      "subject": "Monthly Update",
-      "sentDate": "2026-02-20T10:00:00Z",
-      "openRate": 45.2,
-      "clickRate": 12.8,
-      "totalSent": 2380
-    }
-  }
-}
-```
-
----
-
-### Campaign Management
-
-#### Get All Campaigns
-**GET** `/api/admin/newsletter/campaigns?page=1&limit=20`
-
-Get paginated list of newsletter campaigns.
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "campaigns": [
-      {
-        "id": "uuid",
-        "subject": "Monthly Update",
-        "status": "sent",
-        "sentDate": "2026-02-20T10:00:00Z",
-        "createdAt": "2026-02-18T14:30:00Z",
-        "openRate": 45.2,
-        "clickRate": 12.8,
-        "totalSent": 2380
-      },
-      {
-        "id": "uuid",
-        "subject": "New Features",
-        "status": "scheduled",
-        "scheduledDate": "2026-02-25T09:00:00Z",
-        "createdAt": "2026-02-19T10:00:00Z",
-        "openRate": 0,
-        "clickRate": 0,
-        "totalSent": 0
-      },
-      {
-        "id": "uuid",
-        "subject": "Draft Newsletter",
-        "status": "draft",
-        "createdAt": "2026-02-20T11:00:00Z",
-        "openRate": 0,
-        "clickRate": 0,
-        "totalSent": 0
-      }
-    ],
-    "pagination": {
-      "total": 45,
-      "page": 1,
-      "pages": 3,
-      "limit": 20
-    }
-  }
-}
-```
-
-**Campaign Status Values:**
-- `draft`: Not yet sent
-- `scheduled`: Scheduled for future sending
-- `sending`: Currently being sent
-- `sent`: Successfully sent
-- `failed`: Failed to send
-
----
-
-#### Get Single Campaign
-**GET** `/api/admin/newsletter/campaigns/:id`
-
-Get details of a specific campaign.
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "uuid",
-    "subject": "Monthly Update",
-    "previewText": "Check out what's new this month",
-    "fromName": "Wealthy Elephant",
-    "content": {
-      "blocks": [
-        {
-          "type": "text",
-          "content": "<p>Hello subscribers!</p>"
-        },
-        {
-          "type": "image",
-          "url": "https://example.com/image.jpg",
-          "alt": "Feature image",
-          "link": "https://example.com"
-        },
-        {
-          "type": "button",
-          "text": "Learn More",
-          "link": "https://example.com/learn",
-          "style": "primary"
-        }
-      ]
-    },
-    "status": "sent",
-    "sentDate": "2026-02-20T10:00:00Z",
-    "totalSent": 2380,
-    "totalOpens": 1075,
-    "totalClicks": 305,
-    "unsubscribes": 5,
-    "createdAt": "2026-02-18T14:30:00Z",
-    "updatedAt": "2026-02-20T10:00:00Z"
-  }
-}
-```
-
----
-
-#### Create Campaign
-**POST** `/api/admin/newsletter/campaigns`
-
-Create a new newsletter campaign.
-
-**Request Body:**
-```json
-{
-  "subject": "Spring Newsletter 2026",
-  "previewText": "Exciting updates for spring",
-  "fromName": "Wealthy Elephant",
-  "content": {
-    "blocks": [
-      {
-        "type": "text",
-        "content": "<h1>Spring Updates</h1><p>Welcome to our spring newsletter!</p>"
-      },
-      {
-        "type": "image",
-        "url": "https://example.com/spring.jpg",
-        "alt": "Spring image"
-      },
-      {
-        "type": "button",
-        "text": "Read More",
-        "link": "https://example.com/blog",
-        "style": "primary"
-      }
-    ]
-  },
-  "status": "draft"
-}
-```
-
-**Content Block Types:**
-- `text`: HTML content
-- `image`: Image with optional link
-- `button`: Call-to-action button
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Campaign created successfully",
-  "data": { /* campaign object */ }
-}
-```
-
----
-
-#### Update Campaign
-**PUT** `/api/admin/newsletter/campaigns/:id`
-
-Update an existing campaign.
-
-**Request Body:** Same as create campaign
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Campaign updated successfully",
-  "data": { /* updated campaign */ }
-}
-```
-
----
-
-#### Delete Campaign
-**DELETE** `/api/admin/newsletter/campaigns/:id`
-
-Delete a campaign.
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Campaign deleted successfully"
-}
-```
-
----
-
-#### Duplicate Campaign
-**POST** `/api/admin/newsletter/campaigns/:id/duplicate`
-
-Create a copy of an existing campaign.
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Campaign duplicated successfully",
-  "data": {
-    "id": "new-uuid",
-    "subject": "Copy of Monthly Update",
-    "status": "draft"
-  }
-}
-```
-
----
-
-#### Send Test Email
-**POST** `/api/admin/newsletter/campaigns/:id/test`
-
-Send a test email to verify campaign appearance.
-
-**Request Body:**
-```json
-{
-  "email": "test@example.com"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Test email sent successfully"
-}
-```
-
----
-
-#### Send Campaign
-**POST** `/api/admin/newsletter/campaigns/:id/send`
-
-Send campaign to all active subscribers.
-
-**Request Body:**
-```json
-{
-  "sendType": "now"
-}
-```
-
-Or schedule for later:
-```json
-{
-  "sendType": "scheduled",
-  "scheduledDate": "2026-02-25T09:00:00Z"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Campaign is being sent"
-}
-```
-
-Or for scheduled:
-```json
-{
-  "success": true,
-  "message": "Campaign scheduled successfully"
-}
-```
-
-**Note:** Campaigns are sent in batches of 50 subscribers with 1-second delays between batches to avoid rate limits.
-
----
-
-#### Get Campaign Analytics
-**GET** `/api/admin/newsletter/campaigns/:id/analytics`
-
-Get detailed analytics for a sent campaign.
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "subject": "Monthly Update",
-    "sentDate": "2026-02-20T10:00:00Z",
-    "totalSent": 2380,
-    "openRate": 45.2,
-    "clickRate": 12.8,
-    "unsubscribes": 5,
-    "topLinks": [
-      {
-        "url": "https://example.com/feature",
-        "clicks": 245
-      },
-      {
-        "url": "https://example.com/blog",
-        "clicks": 189
-      }
-    ]
-  }
-}
-```
-
----
-
-### Subscriber Management
-
-#### Get All Subscribers
-**GET** `/api/admin/newsletter/subscribers?page=1&limit=50&status=active`
-
-Get paginated list of newsletter subscribers.
-
-**Query Parameters:**
-- `page`: Page number (default: 1)
-- `limit`: Items per page (default: 50)
-- `status`: Filter by status - `active` | `inactive` (optional)
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "subscribers": [
-      {
-        "id": "uuid",
-        "email": "user@example.com",
-        "name": "John Doe",
-        "status": "active",
-        "subscribedAt": "2026-01-15T10:00:00Z"
-      }
-    ],
-    "pagination": {
-      "total": 2431,
-      "page": 1,
-      "pages": 49,
-      "limit": 50
-    }
-  }
-}
-```
-
----
-
-#### Search Subscribers
-**GET** `/api/admin/newsletter/subscribers/search?q=john@example.com`
-
-Search subscribers by email or name.
-
-**Query Parameters:**
-- `q`: Search query (required)
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "subscribers": [
-      {
-        "id": "uuid",
-        "email": "john@example.com",
-        "name": "John Doe",
-        "status": "active",
-        "subscribedAt": "2026-01-15T10:00:00Z"
-      }
-    ]
-  }
-}
-```
-
-**Limit:** Returns maximum 50 results
-
----
-
-#### Export Subscribers
-**GET** `/api/admin/newsletter/subscribers/export`
-
-Export all active subscribers as CSV file.
-
-**Response:** CSV file download
-```csv
-Email,Name,Subscribed At
-user1@example.com,"John Doe",2026-01-15T10:00:00Z
-user2@example.com,"Jane Smith",2026-01-20T14:30:00Z
-```
-
-**Headers:**
-```
-Content-Type: text/csv
-Content-Disposition: attachment; filename=subscribers.csv
-```
-
----
-
 ## Database Schema
 
 ### Required SQL Setup
 
-Run the following SQL script in your Supabase SQL editor to create the necessary tables:
+Run the following SQL script in your Supabase SQL editor to add admin features:
 
 **File:** `prisma/admin-schema.sql`
 
-Key tables created:
-- `NewsletterCampaign`: Stores newsletter campaigns
-- `CampaignAnalytics`: Tracks opens, clicks, and unsubscribes
-- Adds `status` and `adminNotes` columns to existing tables
-- Creates indexes for performance optimization
+This script adds:
+- `status` column to all form submission tables (for tracking new/pending/completed)
+- `adminNotes` column for admin comments
+- Indexes for better query performance
 
 **Status Values:**
 - Contact Inquiry: `new` | `pending` | `completed`
 - Klin Requests: `pending` | `completed`
 - Kaizen Projects: `pending` | `completed`
-- Newsletter Campaigns: `draft` | `scheduled` | `sending` | `sent` | `failed`
 
 ---
 
@@ -1195,18 +750,6 @@ npm run create-admin
 
 ## Testing Endpoints
 
-### Test All Public Endpoints
-
-Use the provided test scripts:
-
-```bash
-# Test all form endpoints
-bash test-all-endpoints.sh
-
-# Test admin login
-bash test-login-api.sh
-```
-
 ### Example cURL Commands
 
 **Login:**
@@ -1249,23 +792,16 @@ curl -X POST https://wealthy-elephant-backend.vercel.app/api/contact \
 - Klin partnership requests
 - Newsletter subscription with welcome emails
 - Newsletter unsubscribe functionality
-- Email open tracking (pixel tracking)
 
 **Admin Features:**
 - JWT-based authentication
 - Dashboard overview with statistics
-- Contact inquiry management
+- Newsletter subscriber count display
+- Contact inquiry management with pagination
 - Klin request management (all types)
 - Kaizen project management
-- Newsletter campaign creation and editing
-- Newsletter campaign scheduling
-- Newsletter campaign sending (batch processing)
-- Test email sending
-- Campaign analytics (opens, clicks, top links)
-- Subscriber management
-- Subscriber search
-- Subscriber export (CSV)
-- Campaign duplication
+- Status updates (new/pending/completed)
+- Admin notes for each submission
 
 **Technical Features:**
 - Rate limiting on all public endpoints

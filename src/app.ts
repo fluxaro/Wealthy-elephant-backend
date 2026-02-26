@@ -14,7 +14,6 @@ import authRouter from './api/auth';
 import adminRouter from './api/admin';
 import adminKlinRouter from './api/admin-klin';
 import adminKaizenRouter from './api/admin-kaizen';
-import adminNewsletterRouter from './api/admin-newsletter';
 
 // Load environment variables
 dotenv.config();
@@ -49,7 +48,6 @@ app.use('/api/newsletter', newsletterRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/admin/klin', adminKlinRouter);
 app.use('/api/admin/kaizen', adminKaizenRouter);
-app.use('/api/admin/newsletter', adminNewsletterRouter);
 
 // 404 handler
 app.use((req: Request, res: Response) => {

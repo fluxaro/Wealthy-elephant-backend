@@ -65,26 +65,6 @@ router.get('/stats', async (req: Request, res: Response, next: NextFunction) => 
       .select('*', { count: 'exact', head: true })
       .eq('isActive', true);
 
-    // Get last campaign
-    const { data: lastCampaign } = await db
-      .from('NewsletterCampaign')
-      .select('*')
-      .eq('status', 'sent')
-      .order('sentDate', { ascending: false })
-      .limit(1)
-      .single();
-
-    const lastCampaignData = lastCampaign ? {
-      subject: lastCampaign.subject,
-      sentDate: lastCampaign.sentDate,
-      openRate: lastCampaign.totalSent > 0 
-        ? ((lastCampaign.totalOpens / lastCampaign.totalSent) * 100).toFixed(1)
-        : 0,
-      clickRate: lastCampaign.totalSent > 0
-        ? ((lastCampaign.totalClicks / lastCampaign.totalSent) * 100).toFixed(1)
-        : 0,
-    } : null;
-
     res.json({
       success: true,
       data: {
@@ -106,7 +86,6 @@ router.get('/stats', async (req: Request, res: Response, next: NextFunction) => 
         newsletter: {
           totalSubscribers: totalSubscribers || 0,
           activeSubscribers: activeSubscribers || 0,
-          lastCampaign: lastCampaignData,
         },
       },
     });
