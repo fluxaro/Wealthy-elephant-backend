@@ -5,9 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
-    "build": "tsc",
+    "build": "echo 'Serverless functions - no build needed'",
     "start": "node dist/server.js",
-    "vercel-build": "echo 'Building for Vercel...' && npm run build",
+    "vercel-build": "echo 'Serverless functions - no build needed'",
     "create-admin": "ts-node scripts/create-admin.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
