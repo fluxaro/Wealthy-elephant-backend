@@ -1,5 +1,5 @@
 // Vercel serverless function entry point
-import { Request, Response } from 'express';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import app from '../src/app';
 
 const allowedOrigins = [
@@ -9,8 +9,8 @@ const allowedOrigins = [
   'http://localhost:5174',
 ];
 
-export default (req: Request, res: Response) => {
-  const origin = req.headers.origin;
+export default async (req: VercelRequest, res: VercelResponse) => {
+  const origin = req.headers.origin as string;
   
   // Set CORS headers for allowed origins
   if (origin && allowedOrigins.includes(origin)) {
@@ -23,10 +23,9 @@ export default (req: Request, res: Response) => {
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
   
   // Pass to Express app
-  return app(req, res);
+  return app(req as any, res as any);
 };
