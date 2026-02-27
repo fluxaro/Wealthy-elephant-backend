@@ -4,6 +4,7 @@ import app from '../src/app';
 
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'https://www.wealthyelephant.com',
+  'https://wealthy-elephant-frontend.vercel.app',
   'http://localhost:3000',
   'http://localhost:5173',
   'http://localhost:5174',
